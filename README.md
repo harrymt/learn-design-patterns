@@ -100,6 +100,21 @@ public class XXXCoffee implements Coffee {
    
 }
 ```
+Now lets make coffee!
+
+```java
+baseCoffee = new BaseCoffee();
+System.out.println(baseCoffee.getCost()); // 10
+System.out.println(baseCoffee.getDescription()); // Base coffee
+
+baseCoffee = new MochaCoffee(baseCoffee);
+System.out.println(baseCoffee.getCost()); // 15
+System.out.println(baseCoffee.getDescription()); // Base coffee, chocolate
+
+baseCoffee = new XXXCoffee(baseCoffee);
+System.out.println(baseCoffee.getCost()); // 15 + ...
+System.out.println(baseCoffee.getDescription()); // Base coffee, chocolate + ...
+```
 
 
 ## Proxy [B]
