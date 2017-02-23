@@ -44,6 +44,64 @@ Helping me learn (only the ['best'](http://www.yegor256.com/2016/02/03/design-pa
 ## Bridge [A]
 ## Composite [A]
 ## Decorator [A++]
+
+> You offer a base service with additional items, each one of these items extends a base class via an interface. You can create a service then add on additional items to build up a list of multiple functions by chaining them together.
+
+The interface
+
+```java
+public interface Coffee {
+
+    int getCost();
+
+    String getDescription();
+
+}
+```
+
+The base class. This sets the base variables for each service.
+
+```java
+public class BaseCoffee implements Coffee {
+
+    String getDescription() { return "Base coffee"; }
+    
+    int getCost() {
+      int base_cost = 10;
+      return base_cost;
+    }
+
+}
+```
+
+The multiple addon items.
+
+```java
+public class MochaCoffee implements Coffee {
+  
+   private coffee;
+   public Mocha(Coffee c) { coffee = c; }
+   
+   String getDescription() {
+       return this.coffee.getDescription() + ", chocolate";
+   }
+   
+   int getCost() {
+       int chocolate_cost = 5;
+       return this.coffee.getCost() + chocolate_cost;
+   }
+
+}
+
+// Add more
+public class XXXCoffee implements Coffee {
+   
+   // ... Same as above
+   
+}
+```
+
+
 ## Proxy [B]
 
 # Behavioral
