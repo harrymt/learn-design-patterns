@@ -104,4 +104,16 @@ int add(int x, int y); // BAD
 int sum(int x, int y); // GOOD!!!
 ```
 
+## Don't use constants
+
+```java
+new HttpRequest().method("POST").fetch(); // Bad
+
+class HttpRequest { final String Post = "POST"; } // Bad
+new HttpRequest().method(HttpRequest.Post).fetch(); // Bad
+
+class PostRequest { } // Now any changes are specific to the action, rather than generic POST string.
+new PostRequest(new HttpRequest()).fetch(); // Good
+```
+
 ## ..
