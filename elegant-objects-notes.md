@@ -80,7 +80,14 @@ Cash salary = new DefaultCash(10);
 System.out.println(salary.multiply(2).multiply(10).gbp());
 ```
 
-## Think about return content rather than action, when naming methods
+## Builders and Manipulators
+
+```java
+int sum(int x, int y); // Builder, because it returns something
+void paint(Color c); // Manipulator, because it performs an action
+```
+
+## Think about return content rather than action, when naming Builder methods
 
 ```java
 InputStream load(URL url); // BAD
@@ -97,4 +104,4 @@ int add(int x, int y); // BAD
 int sum(int x, int y); // GOOD!!!
 ```
 
-## sss
+## ..
