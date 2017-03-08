@@ -80,4 +80,21 @@ Cash salary = new DefaultCash(10);
 System.out.println(salary.multiply(2).multiply(10).gbp());
 ```
 
-## ...
+## Think about return content rather than action, when naming methods
+
+```java
+InputStream load(URL url); // BAD
+InputStream stream(URL url); // GOOD!!!
+```
+
+```java
+String read(File f); // BAD
+String content(File f); // GOOD!!
+```
+
+```java
+int add(int x, int y); // BAD
+int sum(int x, int y); // GOOD!!!
+```
+
+## sss
