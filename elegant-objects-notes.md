@@ -35,7 +35,7 @@ class Cash {
 
 - Just assign the items in constructors, don't actually have any logic, otherwise everytime we create an object we will have to perform that logic and its hard to refactor code later and leads to unmaintainable code.
 
-## Encapsulate as little as possible (max 4)
+## Encapsulate as little as possible (max 4), min 2
 
 ```java
 class Cash {
@@ -45,3 +45,39 @@ class Cash {
   // More than 4 properties, is a codesmell and should be refactored into max 4 samller objects.
 }
 ```
+
+## Always use interfaces
+
+```java
+interface Cash {
+    Cash multiply(float mul);
+    int gbp();
+}
+
+class DefaultCash implements Cash {
+    private int dollars;
+    
+    DefaultCash(int dollars) {
+        this.dollars = dollars;
+    }
+    @Override
+    public int gbp() {
+    	return this.dollars;
+    }
+    
+    @Override
+	public
+    Cash multiply(float mul) {
+        return new DefaultCash((int) (this.dollars * mul));
+    }
+}
+```
+
+Run like:
+
+```java
+    Cash salary = new DefaultCash(10);
+    System.out.println(salary.multiply(2).multiply(10).gbp());
+```
+
+## .
