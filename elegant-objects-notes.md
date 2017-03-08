@@ -116,4 +116,6 @@ class PostRequest { } // Now any changes are specific to the action, rather than
 new PostRequest(new HttpRequest()).fetch(); // Good
 ```
 
-## ..
+## Never make classes Mutable
+
+- It is bad..
