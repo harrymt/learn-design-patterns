@@ -76,8 +76,8 @@ class DefaultCash implements Cash {
 Run like:
 
 ```java
-    Cash salary = new DefaultCash(10);
-    System.out.println(salary.multiply(2).multiply(10).gbp());
+Cash salary = new DefaultCash(10);
+System.out.println(salary.multiply(2).multiply(10).gbp());
 ```
 
-## .
+## ...
