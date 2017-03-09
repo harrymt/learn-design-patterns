@@ -138,5 +138,41 @@ System.out.println(baseCoffee.getDescription()); // Base coffee, chocolate + ...
 ## Object Pool [A]
 ## Lazy Initialization [B+]
 ## Null Object [A]
+
+```java
+public interface Animal {
+ 	void makeSound();
+}
+
+public class Dog implements Animal {
+	 public void makeSound() {
+	 	 System.out.println("woof!");
+	 }
+}
+
+public class NullAnimal implements Animal {
+	 public void makeSound() { 
+     // Silence
+  }
+}
+```
+
+To run
+
+```java
+String animalType = ''; // or 'dog'
+Animal animal;
+switch (animalType) {
+   case 'dog':
+       animal = new Dog();
+       break;
+   default:
+       animal = new NullAnimal();
+       break;
+}
+
+animal.makeSound(); // ..the null animal makes no sound
+```
+
 ## RAII [A+]
 
