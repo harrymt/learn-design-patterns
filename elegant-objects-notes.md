@@ -116,9 +116,9 @@ class PostRequest { } // Now any changes are specific to the action, rather than
 new PostRequest(new HttpRequest()).fetch(); // Good
 ```
 
-### Never make classes Mutable
+### Never make classes Mutable for 5 reasons
 
-- If objects can change (Mutable) then we end up with situations like this:
+#### 1. If objects can change (Mutable) then we end up with situations like this:
 
 ```java
 Cash five = new Cash(5);
@@ -138,18 +138,156 @@ System.out.println(map); // {10 => "five", 10 => "ten"} WRONG
 ```
 
 
-Another dissadvantage with imutable objects is Failure Atomicity.
+#### 2. Another Advantage with Immutable objects is Failure Atomicity.
+
+If an object is mutable, then half of the object can be altered and the other is not altered, this can be a nightmare to debug!
 
 ```java
 // BAD
-2.6.2!
+class Cash {
+  private int dollars;
+  private int cents;
+  public void mul(int factor) {
+    this.dollars *= factor;
+    if (/* something is wrong */) {
+      throw new RuntimeException("oops..");
+    }
+    this.cents *= factor;
+  }
+}
 ```
 
-This is better
+This is better because I cannot return a half edited object.
+
 ```java
 // GOOD
-
+class Cash {
+  private final int dollars;
+  private final int cents;
+  public void mul(int factor) {
+    if (/* something is wrong */) {
+      throw new RuntimeException("oops..");
+    }
+    return new Cash(
+       this.dollars * factor,
+       this.cents * factor
+    );
+  }
+}
 ```
 
+#### 3. Immutable objects don't have `setXXX()` methods, therefore are not affected by temporal coupling and bad NULL.
 
-###
+Because they don't have set methods, they rarely use NULL fields, which is good.
+
+```java
+// BAD
+Cash price = new Cash();
+// 50 lines to calculate 29 dollars
+price.setDollars(29);
+
+// If I just try and check what price is here, its gonna be an issue:
+System.out.println(price); // 29.??? probably 00 but we dont know that!
+
+// 30 lines to calculate 95 cents
+price.setCents(95);
+// 25 lines to calculate other stuff
+System.out.println(price); // 29.95
+```
+
+Immutable objects are not affected by temporal coupling:
+
+```java
+int dollars = 29;
+// 100 lines
+int cents = 95;
+// 30 lines
+Cash price = new Cash(dollars, cents);
+System.out.println(price); // 29.95
+```
+
+#### 4. If an object is mutable, people can edit it on the fly.
+
+This is also good for Thread Safety, if one thread modifies something then we get unexpected behaviour in the other thread.
+
+```java
+// BAD
+void harrysprintfunction(Cash price) {
+  System.out.println("Todays price is " + price);
+  price.mul(2);
+  System.out.println("Tomorrow the price is :" + price);
+}
+
+// Calling this method has side affects
+Cash five = new Cash(5);
+harrysprintfunction(five);
+System.out.println(five); // 10, not 5!!!
+```
+
+### Only use 250 SLOC Source Lines of Code for a CLASS
+
+To make things simpler.
+
+
+### Tests should show people how to use your class, not documentation
+
+```java
+// Perfect code w/o need for documentation
+Employee jeff = department.employee("Jeff");
+jeff.giveRaise(new Cash(200));
+if (jeff.performance() < 3.5) {
+  jeff.fire();
+}
+```
+
+Perfect unit tests for our Cash class, uses Hamcrest and JUnit. This explains how to use our Cash class simply.
+
+```java
+class CashTest {
+  @Test
+  public void summarizes() {
+    assertThat(
+      new Cash(5).plus(new Cash(3)),
+      equalTo(new Cash(8))
+    );
+  }
+  @Test
+  public void deducts() {
+    assertThat(
+      new Cash(7).plus(new Cash(-11)),
+      equalTo(new Cash(-4))
+    );
+  }
+  @Test
+  public void multiplies() {
+    assertThat(
+      new Cash(2).mul(3),
+      equalTo(new Cash(6))
+    )
+  }
+}
+```
+
+### Classes should only have a few public methods!!!!!!
+
+### Never use Mock tests, i.e. just only create the result, use fake objects!
+
+This is an example of how to encourperate your Fake objects into an interface, so the tests are in the same place.
+
+```java
+interface Exchange {
+  float rate(String target);
+  float rate(String origin, String target);
+  
+  float class Fake implements Exchange {
+    @Override
+    float rate(String target) {
+      return this.rate("USD", target); // Our fake currency
+    }
+    @Override
+    float rate(String origin, String target) {
+      return 1.2345; // Our fake rate.
+  }
+}
+```
+
