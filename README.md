@@ -2,6 +2,8 @@
 
 Helping me learn (only the ['best'](http://www.yegor256.com/2016/02/03/design-patterns-and-anti-patterns.html)) Object Orientated [design patterns](https://github.com/kamranahmedse/design-patterns-for-humans) with real world scenarios.
 
+I have also gone through the [Elegant Objects](http://www.harrymt.com/learn-design-patterns/elegant-objects/) book. See everything [online](http://www.harrymt.com/learn-design-patterns/).
+
 **Contents**
 * [Creational](#creational)
   * [Abstract Factory B+](#abstract-factory-b)
