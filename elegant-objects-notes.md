@@ -116,7 +116,7 @@ class PostRequest { } // Now any changes are specific to the action, rather than
 new PostRequest(new HttpRequest()).fetch(); // Good
 ```
 
-### Never make classes Mutable for 5 reasons
+### Never make classes Mutable for 4 reasons
 
 #### 1. If objects can change (Mutable) then we end up with situations like this:
 
