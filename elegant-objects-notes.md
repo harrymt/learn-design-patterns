@@ -268,7 +268,9 @@ class CashTest {
 }
 ```
 
-### Classes should only have a few public methods!!!!!!
+### Classes should only have a few public methods
+
+Again to make things simpler, if we find we need more, try and break down into smaller objects.
 
 ### Never use Mock tests, i.e. just only create the result, use fake objects!
 
@@ -290,4 +292,34 @@ interface Exchange {
   }
 }
 ```
+
+### Use 'Smart' classes inside of interfaces, so we can easily refactor w/o too much upset.
+
+```java
+interface Exchange {
+  float rate(String origin, String target);
+  
+  // Smart Class
+  final class Fast implements Exchange {
+    private final Exchange origin;
+    
+    @Override
+    public float rate(String source, String target) {
+      final float rate;
+      if (source.equals(target)) { // If we are converting USD == USD
+        rate = 1.0f;
+      } else {
+        rate = this.origin.rate(source, target); // the one at the top.
+      }
+      return rate;
+    }
+    
+    // Smart method
+    public float toUsd(String source) {
+      return this.origin.rate(source, "USD");
+    }
+  }
+}
+```
+
 
