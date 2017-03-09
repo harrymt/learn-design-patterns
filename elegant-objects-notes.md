@@ -1,3 +1,6 @@
+---
+permalink: /elegant-objects/
+---
 ## Elegant Objects notes
 
 Notes about Object Orientated Language constructs from the book [Elegant Objects](http://www.yegor256.com/elegant-objects.html).
