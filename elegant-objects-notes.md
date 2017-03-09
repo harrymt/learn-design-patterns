@@ -31,11 +31,11 @@ class Cash {
 }
 ```
 
-## Code free constructors
+### Code free constructors
 
 - Just assign the items in constructors, don't actually have any logic, otherwise everytime we create an object we will have to perform that logic and its hard to refactor code later and leads to unmaintainable code.
 
-## Encapsulate as little as possible (max 4), min 2
+### Encapsulate as little as possible (max 4), min 2
 
 ```java
 class Cash {
@@ -46,7 +46,7 @@ class Cash {
 }
 ```
 
-## Always use interfaces
+### Always use interfaces
 
 ```java
 interface Cash {
@@ -80,14 +80,14 @@ Cash salary = new DefaultCash(10);
 System.out.println(salary.multiply(2).multiply(10).gbp());
 ```
 
-## Builders and Manipulators
+### Builders and Manipulators
 
 ```java
 int sum(int x, int y); // Builder, because it returns something
 void paint(Color c); // Manipulator, because it performs an action
 ```
 
-## Think about return content rather than action, when naming Builder methods
+### Think about return content rather than action, when naming Builder methods
 
 ```java
 InputStream load(URL url); // BAD
@@ -104,7 +104,7 @@ int add(int x, int y); // BAD
 int sum(int x, int y); // GOOD!!!
 ```
 
-## Don't use constants
+### Don't use constants
 
 ```java
 new HttpRequest().method("POST").fetch(); // Bad
@@ -116,6 +116,40 @@ class PostRequest { } // Now any changes are specific to the action, rather than
 new PostRequest(new HttpRequest()).fetch(); // Good
 ```
 
-## Never make classes Mutable
+### Never make classes Mutable
 
-- It is bad..
+- If objects can change (Mutable) then we end up with situations like this:
+
+```java
+Cash five = new Cash(5);
+five.mul(10);
+System.out.println(five); // oops its $50, not 5
+```
+
+or
+
+```java
+Map<Cash, String> map = new HashMap<>();
+Cash five = new Cash(5);
+Cash ten = new Cash(10);
+map.put(five, "five"); map.put(ten, "ten");
+five.mul(10);
+System.out.println(map); // {10 => "five", 10 => "ten"} WRONG
+```
+
+
+Another dissadvantage with imutable objects is Failure Atomicity.
+
+```java
+// BAD
+2.6.2!
+```
+
+This is better
+```java
+// GOOD
+
+```
+
+
+###
