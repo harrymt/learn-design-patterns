@@ -5,6 +5,30 @@ permalink: /elegant-objects/
 
 Notes about Object Orientated Language constructs from the book [Elegant Objects](http://www.yegor256.com/elegant-objects.html).
 
+
+## Summary
+
+- [GOOD File.write(), BAD writer](#never-use-er-names)
+- [GOOD Cash.usd(), BAD CashFormatter](#object-is-defined-by-what-it-is-rather-than-what-it-does)
+- [Few methods, many constructors that call the one below](#have-many-fall-through-constructors-and-few-methods)
+- [< 4 properties in classes](#encapsulate-as-little-as-possible-max-4-min-2)
+- [Always use interfaces](#always-use-interfaces)
+- [Know distinction between builders and manipulators](#builders-and-manipulators)
+- [Think about Builder return content, rather than action](#think-about-return-content-rather-than-action-when-naming-builder-methods)
+- [Don't use constants, use methods that are specific to that constant value](#dont-use-constants)
+- [BAD mutable classes, 4 reasons](#never-make-classes-mutable-for-4-reasons)
+   - [1. Unexpected property values](#1-if-objects-can-change-mutable-then-we-end-up-with-situations-like-this)
+   - [2. Cant return a partyl modified object](#2-another-advantage-with-immutable-objects-is-failure-atomicity)
+   - [3. They don't have setProperty methods](#3-immutable-objects-dont-have-setxxx-methods-therefore-are-not-affected-by-temporal-coupling-and-bad-null)
+   - [4. Cannot be edited on the fly](#4-if-an-object-is-mutable-people-can-edit-it-on-the-fly)
+- [Max 250 Source LOC per class](#only-use-250-sloc-source-lines-of-code-for-a-class)
+- [Instead of documentation write a test](#tests-should-show-people-how-to-use-your-class-not-documentation)
+- [Classes should have little public methods](#classes-should-only-have-a-few-public-methods)
+- [Never Mock, add Fake test objects into the class interface](#never-use-mock-tests-ie-just-only-create-the-result-use-fake-objects)
+- [Add classes inside of interfaces for easy refactor](#use-smart-classes-inside-of-interfaces-so-we-can-easily-refactor-wo-too-much-upset)
+
+
+
 ### Never use er names
 
 - BAD writer
