@@ -349,4 +349,129 @@ interface Exchange {
 }
 ```
 
+### Don't use (Static methods / Utility functions / Singleton Pattern)
+
+The reason we don't use these, is so we don't have to perform any calculations until we actually want the content, and call `.content()` on the `WebPage` object.
+
+```java
+// BAD
+class WebPage {
+   public static String read(String uri) {
+      // Make HTTP req & convert to UTF8 string
+   }
+}
+
+// BAD
+String html = WebPage.read("http://harrymt.com");
+```
+
+```java
+// GOOD
+class WebPage {
+  private final String url;
+  public String content() {
+      // Make HTTP req & convert to UTF8 string
+  }
+}
+
+// GOOD
+String html = new WebPage("http://harrymt.com").content();
+```
+
+#### Use 'Composable Decorators'
+
+```java
+// GOOD
+names = new Sorted(
+   new Unique(
+       new Capitalized(
+           new FileNames (
+	       new Directory("/var/users/*.xml")
+	   ),
+	   "([^.]+\\).xml"
+       )
+   )
+);
+```
+
+- Stray away from long procedural code using whiles, ifs and switch statements
+
+```java
+// BAD
+float rate;
+if(client.age() > 65) {
+  rate = 2.5;
+} else {
+  rate = 3.0;
+}
+```
+
+```java
+// Better
+float rate = new If(
+  client.age() > 65,
+  2.5, 3.0
+);
+
+// Even better
+float rate = new If(
+  new Greater(client.age(), 65),
+  2.5, 3.0
+);
+
+// GOOD
+float rate = new If(
+  new GreaterThan(
+    new AgeOf(client),
+    65
+  ),
+  2.5, 3.0
+);
+
+```
+
+
+### Never accept NULL arguments
+
+> Cause lots of bad problems.
+
+```java
+// BAD
+public Iterable<File> find(String mask) {
+   // Find all files that match the mask
+   // Retreive all files, if mask == NULL
+}
+
+// BAD because you need this in your code
+public Iterable<File> find(String mask) {
+  // We are litearlly doing 2 things here, because mask could be NULL!!!
+  if(mask == NULL) {
+     // Find all files
+  } else {
+     // Find files by mask
+  }
+}
+
+// GOOD
+public Iterable<File> findAll();
+public Iterable<File< find(String mask);
+
+```
+
+- Be ignorant when accepting NULL if people give it to your methods, if it fails, the JVM should through a NullPointerException, which is a really good exception for people using your class to see.
+
+```java
+// EVEN BETTER
+public Iterable<File> find(Mask mask) {
+  Collection<File> files = new LinkedList<>();
+  for (File file : /* All files */) {
+    if(mask.matches(file)) { // if mask == NULL, will throw NullPointerException!! GOOD!
+      files.add(file);
+    }
+  }
+  return files;
+}
+
+```
+
 
