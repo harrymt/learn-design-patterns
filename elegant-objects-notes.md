@@ -26,8 +26,9 @@ Notes about Object Orientated Language constructs from the book [Elegant Objects
 - [Classes should have little public methods](#classes-should-only-have-a-few-public-methods)
 - [Never Mock, add Fake test objects into the class interface](#never-use-mock-tests-ie-just-only-create-the-result-use-fake-objects)
 - [Add classes inside of interfaces for easy refactor](#use-smart-classes-inside-of-interfaces-so-we-can-easily-refactor-wo-too-much-upset)
-
-
+- [Don't use static or utility functions or the singleton pattern](#dont-use-static-methods--utility-functions--singleton-pattern)
+  - [Use composable decorators](#use-composable-decorators)
+- [Don't use NULL, EVER!](#never-accept-null-arguments)
 
 ### Never use er names
 
