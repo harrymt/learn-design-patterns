@@ -20,6 +20,7 @@ I have also gone through the [Elegant Objects](http://www.harrymt.com/learn-desi
   * [Command B+](#command-b)
   * [Observer B](#observer-b)
   * [Strategy A](#strategy-a)
+  * [Visitor C](#visitor-c)
 * [Architectural](#architectural)
   * [Interpreter B](#interpreter-b)
   * [Specification B](#specification-b)
@@ -46,6 +47,8 @@ I have also gone through the [Elegant Objects](http://www.harrymt.com/learn-desi
 ## Bridge [A]
 ## Composite [A]
 ## Decorator [A++]
+
+Allows you to easily chain lots of different classes together, with a history, so calling one method, calls the same method on all the other classes that are chained before it.
 
 > You offer a base service with additional items, each one of these items extends a base class via an interface. You can create a service then add on additional items to build up a list of multiple functions by chaining them together.
 
@@ -77,6 +80,7 @@ public class BaseCoffee implements Coffee {
 ```
 
 The multiple addon items.
+This is the actual decorator.
 
 ```java
 public class MochaCoffee implements Coffee {
@@ -127,6 +131,92 @@ System.out.println(baseCoffee.getDescription()); // Base coffee, chocolate + ...
 ## Command [B+]
 ## Observer [B]
 ## Strategy [A]
+## Visitor [C]
+
+> Allows easy partitioning/sorting/manipulation of lists of different objects.
+
+```java
+Fruit fruits[] = new Fruit[] {
+	new Orange(), new Apple(), new Orange(),
+	new Apple(), new Orange()
+};
+```
+
+Have list of Fruit/objects we want to partition into 2 lists, 1 containing apples, the other oranges.
+
+
+Without visitor pattern, we would need to store new lists when we partition/manipulate them.
+We dont get type safety and hard to catch runtime errors.
+
+```java
+// BAD WAY
+List<Orange> oranges = new ArrayList<Orange>(); // You need these lists here
+List<Apple> apples = new ArrayList<Apple>();
+for (Fruit fruit : fruits) {
+	if(fruit.equals(Orange.class)) oranges.add((Orange)fruit); // No type safety
+	if(fruit.equals(Apple.class)) apples.add((Apple)fruit); // Messy
+}
+```
+
+With Visitor pattern:
+
+```java
+// GOOD
+FruitPartitioner p = new FruitPartitioner();
+for (Fruit fruit : fruits) {
+	fruit.accept(p);
+}
+```
+
+The data is stored in the partitioner variable:
+
+```java
+out.println("# Oranges " + p.oranges.size());
+out.println("# Apples " + p.apples.size());
+```
+
+FruitPartitioner.java
+```java
+// Actual visitor
+class FruitPartitioner implements IFruitVisitor {
+	List<Orange> oranges = new ArrayList<Orange>();
+	List<Apple> apples = new ArrayList<Apple>();
+
+	@Override
+	public void visit(Orange f) {oranges.add(f); }
+
+	@Override
+	public void visit(Apple f) { apples.add(f); }
+}
+
+// Visitor interface
+interface IFruitVisitor {
+	public void visit(Orange f);
+	public void visit(Apple f);
+}
+```
+
+Fruit.java and Apple.java, Orange.java and more Fruit.
+```java
+interface Fruit {
+	void accept(IFruitVisitor visitor);
+}
+
+class Orange implements Fruit {
+	@Override
+	public void accept(IFruitVisitor visitor) {
+		visitor.visit(this);
+	}
+}
+
+class Apple implements Fruit {
+	@Override
+	public void accept(IFruitVisitor visitor) {
+		visitor.visit(this);
+	}
+}
+```
+
 
 
 # Architectural
