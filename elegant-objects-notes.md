@@ -29,7 +29,17 @@ Notes about Object Orientated Language constructs from the book [Elegant Objects
 - [Don't use static or utility functions or the singleton pattern](#dont-use-static-methods--utility-functions--singleton-pattern)
   - [Use composable decorators](#use-composable-decorators)
 - [Don't use NULL, EVER!](#never-accept-null-arguments)
-- [Don't name getters or setters]()
+- [Don't use getters or setters](#dont-use-getters-or-setters)
+- [Don't use new outside of secondary constructors](#dont-use-new-outside-of-secondary-constructors)
+- [Avoid type casting/reflection/instanceof](#avoid-type-castingreflectioninstanceof)
+- [Never return NULL](#never-return-null)
+- [Use NULL objects, or return empty collections, rather than returning NULL](#use-null-objects-or-return-empty-collections-rather-than-returning-null)
+- [Only throw checked exceptions](#only-throw-checked-exceptions)
+- [Don't catch exceptions, unless you HAVE to](#dont-catch-exceptions-unless-you-have-to)
+- [Always chain exceptions](#always-chain-exceptions)
+- [Use final or abstract](#use-final-or-abstract)
+- [Use RAII](#use-raii)
+
 
 ### Never use er names
 
