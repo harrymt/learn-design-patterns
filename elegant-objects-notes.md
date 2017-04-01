@@ -29,6 +29,7 @@ Notes about Object Orientated Language constructs from the book [Elegant Objects
 - [Don't use static or utility functions or the singleton pattern](#dont-use-static-methods--utility-functions--singleton-pattern)
   - [Use composable decorators](#use-composable-decorators)
 - [Don't use NULL, EVER!](#never-accept-null-arguments)
+- [Don't name getters or setters]()
 
 ### Never use er names
 
@@ -144,7 +145,7 @@ class PostRequest { } // Now any changes are specific to the action, rather than
 new PostRequest(new HttpRequest()).fetch(); // Good
 ```
 
-### Never make classes Mutable for 4 reasons
+### Never make classes Mutable for 4 reasons (Make them immutable)
 
 #### 1. If objects can change (Mutable) then we end up with situations like this:
 
@@ -475,4 +476,236 @@ public Iterable<File> find(Mask mask) {
 
 ```
 
+### Don't use getters or setters
 
+```java
+class Cash {
+    private int dollars;
+    
+    public int dollars() {
+        return dollars;
+    }
+    
+    // Bad Naming! We should just have the data, not get it.
+    public int getDollars() {
+        return dollars;
+    }
+}
+
+cash.dollars(); // Okay
+cash.getDollars(); // Bad
+```
+
+### Don't use new outside of secondary constructors
+
+> This example means that we can't nicely unit test euro() as it depends on `Exchange` class.
+
+```java
+class Cash {
+  private final int dollars;
+  public int euro() {
+    // Bad, use of new here.
+    return new Exchange().rate("USD", "EUR") * this.dollars;
+  }
+  
+  // Better as `new` has to be used outside of `Cash`
+  private final Exchange exchange;
+  
+  Cash(int value, Exchange e) {
+    this.dollars = value;
+    this.exchange = e;
+  }
+  
+  public int euro_better() {
+    return this.exchange.rate("USD", "EUR") * this.dollars;
+  }
+}
+```
+
+> This is better as we require exchange to be created outside of our Cash class, used `new` outside.
+
+```java
+Cash five = new Cash(5, new FakeExchange());
+print("$5 equals to %d", five.euro());
+```
+
+
+> Although using multiple constructors is even better
+
+```java
+class Cash {
+  private final int dollars;
+  private final Exchange exchange;
+  Cash() { // secondary constructor
+    this(0):
+  }
+  
+  Cash(int value) { // Another secondary constructor
+    this(value, new NYSE());
+  }
+  
+  Cash(int value, Exchange e) { // Primary
+    this.dollars = value;
+    this.exchange = e;
+  }
+  
+  public int euro() {
+    return this.exchange.rate("USD", "EUR") * this.dollars;
+  }
+}
+```
+
+### Avoid type casting/reflection/instanceof
+
+> Makes your code unmaintainable
+> The dependancy between your code is hidden at compile time, bad!
+
+### Never return NULL
+
+> Makes you not trust a method
+> Fail fast, rather than Fail safe, to catch more errors as you code
+
+```java
+// BAD
+public String title() {
+  if(/* no title */) {
+    return null;
+  }
+  return "Elegant Objects";
+}
+```
+
+> If we try and use `title()` we will not trust it
+
+```java
+String title = book.title();
+print(title.length()); // Possibly NULLPointerException!!!
+```
+
+> Even worse, do not do this!
+
+```java
+String title = book.title();
+// Super bad
+if (title == null) {
+  print("Cant print, its not a title");
+  return;
+}
+print(title.length());
+```
+
+> Example in Java `File` object
+
+```java
+File dir = new File("...");
+```
+
+> Because `File.listFiles()` could return `NULL` we have todo this
+```java
+File[] files = dir.listFiles();
+if(files == null) {
+  throw new IOException("Directory is absent.");
+}
+// Now we can use it
+print(files.length());
+```
+
+> If they just threw an exception rather than using NULL we could just use it straight away.
+
+```java
+print(dir.listFiles().length());
+```
+
+### Use NULL objects, or return empty collections, rather than returning NULL
+
+> Dont return NULL
+
+```java
+// BAD
+public User user(String name) {
+  if(/* user not found in db */) {
+    return null;
+  }
+  
+  return /* user from db */;
+}
+```
+
+> Could make more methods, but inefficient
+
+```java
+// A bit better, but means you have 2 db lookups, which isnt good
+public boolean exists(String name) {
+   return /* if user found in db */;
+}
+public User user(String name) {
+  return /* user from db */;
+}
+```
+
+> Could return empty collections
+
+```java
+// A bit better
+public Collection<User> users(String name) {
+  if(/* not found in db */) {
+    return new ArrayList<>(0);
+  }
+  return Collections.singleton(/* User from db */);
+}
+```
+
+> Or could return NULL objects instead.
+
+```java
+class NullUser implements User {
+  private final String name;
+  NullUser(String n) {
+    this.name = n;
+  }
+
+  @Override
+  public String name() {
+    return this.name;
+  }
+
+  @Override
+  public void raise(Cash salary) {
+    throw new IllegalStateException("I am a stub, you can't raise my salary");
+  }
+}
+```
+
+```java
+// GOOD
+public User user(String name) {
+  if(/* user not found in db */) {
+    return new NullUser(name);
+  }
+  
+  return /* user from db */;
+}
+```
+
+### Only throw checked exceptions
+
+> Some methods have `throws IOException` in its signature, so we have to `check` this exception, always list all exceptions in their signature, so we know what they are.
+
+```java
+// GOOD
+public byte[] content(File f) throws IOException {
+  byte[] a = new byte[10];
+  new FileInputStream(f).read(a);
+  return a;
+}
+```
+
+```java
+// BAD
+public int len(File f) {
+  if(!f.exists()) {
+    throw new IllegalArgException("File doesnt exist"); // Should be in signature, throws IllegalArgException
+  }
+  return f.content(f).length();
+}
+```
