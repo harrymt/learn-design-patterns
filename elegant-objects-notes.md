@@ -709,3 +709,42 @@ public int len(File f) {
   return f.content(f).length();
 }
 ```
+
+### Don't catch exceptions, unless you HAVE to
+
+> This example is fail safe, but also won't catch errors with the filesystem, so its hiding future errors!
+
+```java
+// Super bad
+public int length(File f) {
+  try {
+     return content(f).length();
+  } catch (IOException e) {
+    return 0; // SUPER BAD
+    // return -1; // Also bad, becuase we are forcing people who use this method, to ALWAYS check if its -1!!
+  }
+}
+```
+
+### Always chain exceptions
+
+> Rethrow if you have to, but don't loose valuable information from the previous exception! Best to just not catch until you really have to!
+
+> Basically only use 1 try catch at the highest level possible.
+
+### Use final or abstract
+
+> If we could have final classes in Java, we would make every class final or abstract
+
+### Use RAII
+
+> We want resources to be closed automatically when we are finished using them, because Java uses Garbage Collection we can only do this using try (code)
+> Deconstructors in C++
+> Or `AutoClosable` in Java, or `using` in Visual Basic
+
+```java
+int main() {
+  try (Text t = new Text("text.txt") {
+  }
+}
+```
