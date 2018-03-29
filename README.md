@@ -131,6 +131,36 @@ System.out.println(baseCoffee.getDescription()); // Base coffee, chocolate + ...
 ## Command [B+]
 ## Observer [B]
 ## Strategy [A]
+
+> Allows easy switching of the algorithm or strategy.
+
+```java
+interface SortStrategy {
+	int[] sort(int[] array);
+}
+class BubbleSort implements SortStrategy { int[] sort(int[] array) { ... } };
+class QuickSort  implements SortStrategy { int[] sort(int[] array) { ... } };
+
+class Sorter {
+	Sorter(SortStrategy algo) {
+		this.sorter = algo;
+	}
+	int[] sort(int[] array) { return this.sorter.sort(array); }
+}
+
+// Usage:
+Sorter bubble = new Sorter(new BubbleSort())
+bubble.sort([3,1,2]);
+
+Sorter quick = new Sorter(new QuickSort());
+quick.sort([3,1,2]);
+```
+
+Pros:
+- Easy to test compared with if's and else's.
+- Does not violate the open/close principle
+- Removes condition based logic
+
 ## Visitor [C]
 
 > Allows easy partitioning/sorting/manipulation of lists of different objects.
