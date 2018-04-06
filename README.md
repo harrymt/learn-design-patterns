@@ -130,6 +130,52 @@ System.out.println(baseCoffee.getDescription()); // Base coffee, chocolate + ...
 ## Chain of Responsibility [B+]
 ## Command [B+]
 ## Observer [B]
+
+> Describes a one to many relationship between objects, so one state changes, the others get notified and update their state automatically.
+
+```java
+void main() {
+	JobSeeker harry = new JobSeeker("Harry"); // Observers
+	JobPostings board = new JobPostings(); // Subject
+	board.attach(harry);
+	board.attach(new JobSeeker("Matt"));
+	
+	// This notifies harry and matt
+	board.addJob(new JobPost("Software Engineer $$$"));
+	
+	board.detach(harry):
+
+	// Only notifies matt
+	board.addJob(new JobPost("SL engineer"))
+}
+
+
+class JobPost { Public String title; }
+class JobSeeker implements Observer {
+	String name;
+	void onJobPosted(JobPost job) {
+		System.out.println("Hello", name, "!", "New job posted", job.title);
+	}
+}
+
+class JobPostings implements Observeral {
+	protected List<Observer> observers = new ArrayList<>();
+	void attach(JobSeeker seeker) { observers.add(seeker); }
+	void detach(JobSeeker seeker) { observers.remove(seeker); }
+	
+	void addJob(JobPost job) {
+		this.notify(job);
+	}
+	
+	void notify(JobPost job) {
+		for (Observer seekers : observers) {
+			seekers.onJobPosted(job);
+		}
+	}
+}
+```
+
+
 ## Strategy [A]
 
 > Allows easy switching of the algorithm or strategy.
