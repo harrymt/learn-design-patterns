@@ -48,11 +48,27 @@ I have also gone through the [Elegant Objects](http://www.harrymt.com/learn-desi
 ## Composite [A]
 ## Decorator [A++]
 
+A wrapper, to wrap a method, intervene the method by applying other functionality before or after it happens.
+
+![Decorator UML diagram](https://prashantbrall.files.wordpress.com/2011/02/decorator-pattern-1.png?w=595)
+
+
 Allows you to easily chain lots of different classes together, with a history, so calling one method, calls the same method on all the other classes that are chained before it.
 
 > You offer a base service with additional items, each one of these items extends a base class via an interface. You can create a service then add on additional items to build up a list of multiple functions by chaining them together.
 
-The interface
+**Is SOLID?**
+Yes, supports Open for extension, closed for modification principle
+
+**Pros**
+- At RUNTIME we can create different combinations of functionality.
+- So solves permutation issues, e.g. have to create N possible combinations of these classes 
+
+**Cons**
+- If you rely too much on lots of concrete decorators, results in lots of little classes with overuse being a problem
+
+
+The interface:
 
 ```java
 public interface Coffee {
@@ -79,14 +95,22 @@ public class BaseCoffee implements Coffee {
 }
 ```
 
-The multiple addon items.
-This is the actual decorator.
+This is like the base decorator:
 
 ```java
-public class MochaCoffee implements Coffee {
-  
-   private coffee;
-   public Mocha(Coffee c) { coffee = c; }
+public abstract class CoffeeDecorator implements Coffee {
+	Coffee decoratedCoffee;
+	CoffeeDecorator(Coffee c) { this.decoratedCoffee = c; }
+	
+    	String getDescription() { return decoratedCoffee.getDescription(); }
+	int getCost() { return decoratedCoffee.getCost(); }
+}
+```
+
+Another decorator:
+```java
+public class MochaCoffee extends CoffeeDecorator {
+   public Mocha(Coffee c) { super(c); }
    
    String getDescription() {
        return this.coffee.getDescription() + ", chocolate";
@@ -96,30 +120,35 @@ public class MochaCoffee implements Coffee {
        int chocolate_cost = 5;
        return this.coffee.getCost() + chocolate_cost;
    }
+   
+   int aNewMethod() {
+   	// Additional functionality!
+   }
 
 }
 
-// Add more
-public class XXXCoffee implements Coffee {
+// Add more decorators
+public class XXXCoffee extends CoffeeDecorator {
+   public XXXCoffee(Coffee c) { super(c); }
    
    // ... Same as above
    
 }
 ```
-Now lets make coffee!
+Now lets make coffee with the decorators!
 
 ```java
-baseCoffee = new BaseCoffee();
-System.out.println(baseCoffee.getCost()); // 10
-System.out.println(baseCoffee.getDescription()); // Base coffee
+Coffee coffee = new BaseCoffee();
+System.out.println(coffee.getCost()); // 10
+System.out.println(coffee.getDescription()); // Base coffee
 
-baseCoffee = new MochaCoffee(baseCoffee);
-System.out.println(baseCoffee.getCost()); // 15
-System.out.println(baseCoffee.getDescription()); // Base coffee, chocolate
+coffee = new MochaCoffee(coffee);
+System.out.println(coffee.getCost()); // 15
+System.out.println(coffee.getDescription()); // Base coffee, chocolate
 
-baseCoffee = new XXXCoffee(baseCoffee);
-System.out.println(baseCoffee.getCost()); // 15 + ...
-System.out.println(baseCoffee.getDescription()); // Base coffee, chocolate + ...
+coffee = new XXXCoffee(coffee);
+System.out.println(coffee.getCost()); // 15 + ...
+System.out.println(coffee.getDescription()); // Base coffee, chocolate + ...
 ```
 
 
