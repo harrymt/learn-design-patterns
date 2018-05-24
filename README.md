@@ -38,6 +38,61 @@ I have also gone through the [Elegant Objects](http://www.harrymt.com/learn-desi
 
 ## Abstract Factory [B+]
 ## Factory Method [B]
+
+Pros:
+- hide implementation
+- Easily test application
+- Change design more easily (loose coupling)
+
+Cons:
+- Abstraction
+- Tight coupling between layers
+- Violates interface Segregation sometimes
+
+![Factory Pattern UML](https://www.dotnettricks.com/img/designpatterns/factory.png)
+
+```java
+// Product Interface
+interface IFactory {
+  void drive(int miles);
+}
+
+// ConcreteProduct class
+class Scooter : IFactory {
+  void drive(int miles) { println("Driving " + miles + "km"); }
+}
+// ConcreteProduct class
+class Scooter : IFactory {
+  void drive(int miles) { println("Driving " + (miles * 2) + "km"); }
+}
+
+// Creator Abstract class
+abstract class VehicleFactory { abstract IFactory getVehicle(string name); }
+
+// ConcreteCreator class
+class ConcreteVehicleFactory : VehicleFactory {
+  override IFactory getVehicle(string name) {
+    switch (name) {
+    	case "Scooter": return new Scooter();
+	case "Bike": return new Bike();
+	default: throw new Exception("Vehicle cannot be created");
+    }
+  }
+}
+```
+
+```java
+// Usage
+void main() {
+  VehicleFactory factory = new ConcreteVehicleFactory();
+  IFactory vehicle = factory.getVehicle("Scooter");
+  vehicle.drive(10); // Driving 20km
+  vehicle = factory.getVehicle("Bike");
+  vehicle.drive(10); // Driving 10km
+}
+```
+
+
 ## Prototype [A]
 
 
