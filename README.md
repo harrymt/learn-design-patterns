@@ -213,6 +213,85 @@ System.out.println(coffee.getDescription()); // Base coffee, chocolate + ...
 
 ## Chain of Responsibility [B+]
 ## Command [B+]
+
+> Use an object (a command) to encapsulate all information needed to perform an action at a later time.
+
+Examples are event handlers, or add additional logging information.
+
+![Command pattern UML](http://www.dofactory.com/images/diagrams/net/command.gif)
+
+
+*Example:* The `Receiver` is a Light, the `ConcreteCommand` are actions, e.g. `TurnLightOn()`, `TurnLightOff()`. The `Invoker` is a Remote control.
+
+```java
+interface Command { void execute(); }
+
+// Concrete Commands
+class TurnLightOn : Command { 
+  Light light;
+  TurnLightOn(Light l) { this.light = l; }
+  void execute() { l.on(); }
+}
+
+class TurnLightOff : Command {
+  Light light;
+  TurnLightOff(Light l) { this.light = l; }
+  void execute() { l.off(); }
+}
+
+class OpenDoor : Command {
+  Door door;
+  OpenDoor(Door d) { this.door = d; }
+  void execute() { d.open(); }
+}
+```
+
+```java
+// Reciever
+class Light {
+  void on() { print("on"); }
+  void on() { print("off"); }
+}
+
+// Another reciever
+class Door {
+  void open() { print("open"); }
+  void close() { print("closed"); }
+}
+```
+
+```java
+// Invoker
+class RemoteControl {
+    Command command;
+    void set(Command c) { this.command = c; }
+    void executeCommand() { command.execute(); }
+}
+```
+
+**Usage**
+```java
+Light light = new Light();
+Command switchOn = new TurnLightOn(light);
+Command switchOff = new TurnLightOff(light);
+
+RemoteControl remote = new RemoteControl();
+remote.set(switchOn);
+
+println("I can now control the lights whenever I want.");
+remote.execute(); // light on
+
+println("I can also control other unrelated things, like my door");
+Door door = new Door():
+Command openDoor = new OpenDoor();
+remote.set(openDoor);
+remote.execute(); // opens the door
+
+remote.set(switchOff);
+remote.execute(); // light off
+```
+
+
 ## Observer [B]
 
 > Describes a one to many relationship between objects, so one state changes, the others get notified and update their state automatically.
